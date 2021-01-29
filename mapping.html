@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ELAR Solutions</title>
+		<link href="mapping_style.css" type="text/css" rel="stylesheet">
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<div class="header">
+			<div class="container">
+				<ul class="nav">
+					<li ><a href = "#">Home</a></li>
+					<li><a href="#">Studenting</a></li>
+					<li><a href="#">Mapping</a></li>
+					<li><a href="#">About</a></li>
+				</ul>
+			</div>
+		</div>
+
+
+		<div class="article">
+			<div class = "container">
+				<h1 id="title">Mapping</h1>
+				<p id="last_updated">Last updated on January 20, 2017</p>
+				<h6 id="first_h">How Do You Store Information?</h6>
+				<p> Most people use some combination of bullet points, scribbles, arrows, and all caps.  For some, this may be the best system.  In most circumstances, however, I found it to be lacking.<br/><br/>
+
+				There are two main problems with this system.  First, it does not engage well with visual or spatial learners, and second, bullet points do not convey much information; they only vaguely relay that something is “under” or “part of” something else.<br/><br/>
+
+				Say you want to plan a great dinner for a few friends, who you know love baked chicken and potatoes.  Preparing for the night, you might write a bulleted list:</p>
+				<ul class="dot">
+					<lh class="lh">Dinner with Friends</lh>
+					<li style="margin-left:2em">Good food</li>
+					<li style="margin-left:2em">Friends all together</li>
+				</ul>
+				<p> You could go deeper, stating your goals (what you want) and your method for each part (how you plan to achieve them).</p>
+				<ul class="dot">
+					<lh class="lh">Dinner with Friends</lh>
+					<li>Good food</li>
+						<ul class="circle">
+							<li>Something hot.</li>
+							<li>Balanced amount of starches and proteins.</li>
+							<li>Good baked chicken.</li>
+								<ul class="square">
+									<li>Not dry</li>
+									<li>Need to get chicken</li>
+									<li>Brine 24 hours in advance</li>
+									<li>Bake at 350 degrees for 45 minutes</li>
+								</ul>
+							<li>Homestyle Potatoes</li>
+								<ul class="square">
+									<li>Get potatoes and onions</li>
+									<li>Have Ron bring his cast-iron skillet</li>
+										<ul>
+											<li>Call a few days before</li>
+											<li>Call again (he never responds the first time)</li>
+										</ul>
+									<li>Should be a light, crunchy side dish to contrast the chicken</li>
+								</ul>
+						</ul>
+					<li>Friends all together</li>
+						<ul class="circle">
+							<li>Text Ron, Hermione, and Neville</li>
+								<ul class="square">
+									<li>Tell them to come at 7pm</li>
+									<li>Remind them to bring desserts</li>
+								</ul>
+							<li>Check with Ginny to see if it’s ok that they spend the night afterwards</li>
+						</ul>
+				</ul>
+				
+
+				<!--<ol id="reasons">
+					<li>It does not engage well with visual or spatial learners.<br/><br/></li>
+					<li>Bullet points do not convey much information.  They vaguely relay that something is “under” or “part of” something else. </li>
+				</ol> -->
+
+				<h6>What Would a Better System Look Like?</h6>
+				<p>A better system for capturing information would not only organize information by subcategory, but would allow the user easy access to understanding the relationship between the different pieces of information (we’ll call these objects for the purposes of this post).
+				<br/><br/>
+				For all intents and purposes, this would be a <i>spatial alternative to the bullet point</i>.
+				<br/><br/>
+				Looking at the example above, something sticks out to me.  The objects “should be moist” and “need to get chicken” have different relationships to “Good baked chicken.”  One is a description of what the outcome should be, and the other is a description of how to get it.
+				</p>
+
+				<h6>A Different Way</h6>
+				<p>What if we could encode that information - that one phrase is a description of what something is, and the other is a description of how to get it - <i>in the bullet point</i>?  And better yet, what if we could represent those connections spatially, so the relationship between the ideas could be understood with a glance?  <br/><br/>This is the essence of mapping.  In the simplified map below, the straight line is a “definition connection” (what something is) and the arrow is a “comes from connection” (what causes it).<br/></p> 
+
+				<div id="gbc_img">
+					<img src="initial.png">
+				</div>
+
+				<div id="gbc_text">
+					<ul class="circle">
+						<li>Good baked chicken.</li>
+							<ul class="square">
+								<li>Should be moist</li>
+								<li>Need to get chicken</li>
+								<li>Brine 24 hours in advance</li>
+								<li>Bake at 350 degrees for 45 minutes</li>
+							</ul>
+					</ul>
+				</div>
+
+				<div id="gbc_pd">
+					<p>This map can be read in English as “Good baked chicken should be moist, and comes from getting the chicken, brining it 24 hours in advance, and baking it at 350 degrees for 45 minutes.”<br/><br/>Looking more closely, we can say something more about the “comes from” objects: they happen in a certain order.  You <i>first</i> get the chicken, <i>then</i> you brine it, <i>then</i> you bake it.  You can’t brine a chicken you haven’t gotten, and you can’t bake a chicken you haven’t brined and gotten.  <br/><br/>This is another type of information bullets fail to encode: a path dependency.  Let’s add it to our map.</p>
+				</div>
+				<div id="pd_img">
+					<img src="numbered.png">
+				</div>
+
+				<div id="pd_text">
+						<ul class="circle">
+						<li>Good baked chicken.</li>
+							<ul class="square">
+								<li>Should be moist</li>
+								<li>Need to get chicken</li>
+								<li>Brine 24 hours in advance</li>
+								<li>Bake at 350 degrees for 45 minutes</li>
+							</ul>
+					</ul>
+				</div>
+
+			<div id="full_text">
+				<p> Using these principles, we can map out the entire list.</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="full_img">
+		<img src="full.png">
+	</div>
+
+	<div class="article">
+		<h6>Why Use Maps?</h6>
+		<p>The example above is simple, and could probably just as easily be captured in the bulleted list above.  That said, as the information being stored becomes more and more complex, it becomes increasingly difficult to understand and synthesize information when your mind has to work to recreate the structure of the objects, and the types of connections between them.  The more you can outsource that to your system, the more your mind can be free to synthesize the information.  <br/><br/>
+
+		Thinking about systems that can be modelled this way in terms of language, which is one dimensional, can also be difficult, as we often lose our “place” when describing tree-like structures.  Similarly, language’s inadequacy shows itself in words like “meta” and “macro”, which, seen in the light of this system, are simply describing “the level above this one in the tree”.   The problem with words like “macro” is that they refer to the relationship between two objects locally, instead of to an object’s place in a complex tree.<br/><br/>
+
+		The beauty of this system is that the central principle – breaking things down with layers of abstraction – can remain constant even while the types of connections can change.  In Philosophy, you might have to use “objection”, “rebuttal”, “necessary” or “sufficient” connections.  In Computer Science, you might find the “condition” (“if”, “else”…etc), “class” or “method” connections helpful. Regardless of the subject, mapping can be a powerful way to store and synthesize information, even when you have to create connections on the fly.<br/><br/>
+
+		These are the basics of my mapping system, given with only two types of connections: “comes from” and “definition”.  For a full list of the different types of connections I use, see the Mapping Logic page.<br/><br/>
+	</div>
+
+<footer>
+	<div id="foot_cont">
+		<p>&copy; ELAR Solutions 2017</p>
+	</div>
+</footer>
+</html>

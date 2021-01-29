@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title >Alex Wilf</title>
+	<link href='projects_style.css' type='text/css' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<header>
+	<a class="name" href="index.html">alex wilf</a>
+</header>
+
+<body>
+	<div class="nav_bar">
+		<div class="inner">
+			<!--projects.html -->
+			<a class="nav_elt" href="projects.html">Projects</a>
+			<a class="nav_elt" href="Alex_Wilf_Resume.pdf">Resume</a>
+			<a class="nav_elt" href="about.html">About</a>
+		</div>
+	</div>
+    
+    <div class="proj_wrapper">
+    <div class="proj">
+        <img class="nav_im" src="daytrader.jpg" />
+        <div class="col">
+            <h1 class="h">DayTrader</h1>
+            <p class="p">
+            Predicting the stock market is a game as old as the stock market itself.  On popular ML platforms like Kaggle, users often compete to come up with highly nuanced, optimized models to solve the stock market starting just from price data.  LSTMs may  end up being the most effective model, but the real problem isn't the model - it's the data. <br/><br/>
+
+            Human and algorithmic traders in the financial industry know this, and augment their datasets with lots of useful information about stocks called "technical indicators".  I wanted to make these indicators available to the ML community because it is my hope that bringing this data to the community will help to even the scales. To the best of my knowledge, this is the first dataset of its kind, but I hope it is not the last.<br/> <br/>
+
+            <a style='padding-right: 5px' href="https://www.kaggle.com/abwilf/stock-market-indicators">Kaggle</a>
+            <a style='padding-left: 5px; padding-right: 5px' href="https://github.com/abwilf/daytrader">Repository</a>
+            <a style='padding-left: 5px' href="https://colab.research.google.com/drive/1W6TprjcxOdXsNwswkpm_XX2U_xld9_zZ#offline=true&sandboxMode=true">Quickstart</a>
+
+            </p>
+    </div>
+    </div>
+
+    <div class="proj_wrapper">
+    <div class="proj">
+        <img class="nav_im" src="college_playbook.png" />
+        <div class="col">
+            <h1 class="h">The College Playbook</h1>
+            <p class="p">
+                Over the last four years, I've thought a lot about how to make myself a more efficient student and organization member so I could achieve more and be more present in the relationships that matter to me outside of school. I used to read books about productivity, but I found that a lot of the advice they presented was unrealistic for a college student. I found myself wishing I had a real student's system to use as an example, no matter how imperfect. My system for managing my time and energy is just that: imperfect, but I've written it up anyways so future students interested in becoming more productive and stress free can, at the very least, not repeat the mistakes I've learned from.<br/><br/>
+
+                <a href="https://medium.com/@alexdwilf/the-college-playbook-b2219d25714e" />The College Playbook</a>
+            </p>
+    </div>
+    </div>
+    <div class="proj_wrapper">
+    <div class="proj">
+        <img class="nav_im" src="plerum_design.png" />
+        <h1 class="h">Plerum</h1>
+        <p class="p">
+            College students (as leaders and as group members) often have to coordinate meetings between groups of busy people. As a result, they often answer the question "Send me 5-10 times when you're free", and make liberal use of apps like When2Meet and Doodle Poll to coordinate schedules. When2Meet and Doodle Poll both have three problems: 1) they take time to fill out, 2) they do not update as your schedule updates, so times can become "stale" (no longer valid), and 3) they do not remind participants to fill them out, so the sender must check over and over again, and bug participants to enter their times.  As a student leader, I have wasted a lot of time because of these problems. This app is an effort to ensure that future generations of student leaders do not do the same.<br/><br/>
+
+            <a href="https://github.com/abwilf/plerum">Repository</a>
+        </p>
+    </div>
+    </div>
+    <div class="proj_wrapper">
+	<div class="proj">
+		<img class="nav_im" id ="invarient_img" alt="High level Invarient map made for MGC Database Merge Script" src="invarient_both.png"/>
+		<div class="col">
+		<h1 class="h">Invarient</h1>
+        <p class="p">
+            Invarient started as a paper based system I used to organize my thoughts as trees with different connections indicating different relationships between nodes (e.g., "definition", "necessary", "sufficient", "leads to"). I found it particularly useful for designing large scale coding systems and writing papers in college. I brought it to a few friends, and together we received a $10,000 grant from the <a href="https://lsa.umich.edu/bli">Barger Leadership Institute</a> to implement the idea in a webapp.
+
+            The purpose of the webapp is to give users the ability to capture the complexity of large scale ideas in a structured, modular way while being lightweight enough to render maps quickly on the fly using keyboard shortcuts.  The app allows users to create and apply different types of connections and toggle subtrees to avoid the complexity of tree sizes.  The app is also able to handle cycles, using node "linking" to support a reference based "single source of truth" style system.  We implemented Invarient using node js, javascript, d3, svg and jade/pug. I worked on the project as software engineering lead / PM and back end developer.
+
+            <br/><br/>
+
+			<a href="https://github.com/abwilf/Invarient">Repository</a></p>
+        </div>
+<!--        <img class="nav_im" src="invarient_2.png"/>-->
+	</div>
+    </div>
+    
+    <div class="proj_wrapper">
+	<div class="proj">
+		<img class="nav_im" id ="invarient_img" alt="High level Invarient map made for MGC Database Merge Script" src="merge.png"/>
+		<div class="col">
+			<h1 class="h">MGC Database Merge</h1> 
+            <p class="p">
+            <a href="http://bicentennial.ummgc.org/">The University of Michigan Men's Glee Club</a> has a living alumni base of over 2,500.  Its database system, however, is fragmented: one excel sheet holds current emails; another holds outdated, but important information (e.g., tour years,  positions held...etc); and a third - updated by the School of Music, Theater and Dance Development office - holds the most up to date information except for emails, and excluding the important information above.  The split was due to lack of database functionality followed by an overly powerful (and esoteric) database system that managers stopped using after the person who built it graduated.<br/><br/>
+
+The purpose of this project is to merge the three databases, and set up a scalable system that abstracts away database operations from future Men's Glee Club Alumni Relations Managers, allowing them to type a one-liner to merge databases with the development office, and letting them deal with excel sheets instead of SQL databases.  The project will also act as a wrapper over database queries (should they be needed), and write the results to excel sheets.  Hopefully this solution will support the functionality that will be needed while being simple enough to use that the system will not be forgotten and deprecated.
+            </p>
+			<a href="https://github.com/abwilf/MGC_database_merge">Repository</a></p>
+        </div>
+<!--        <img class="nav_im" src="invarient_2.png"/>-->
+	</div>
+    </div>
+    
+    <div class="proj_wrapper">
+	<div class="proj">
+        <div id="untimed">
+		<img class="nav_im" id ="untimed_img" alt="Untimed's Navigation Bar and Class List" src="nav_page.png"/>
+		<div class="col">
+			<h1 class="h">Untimed</h1> <p class="p">An iOS app integrating my task management and scheduling system.  It allows students to organize tasks by class, assignment, and project, and schedule their time with recurring appointments (e.g. classes), allocating tasks to free blocks in each daily schedule.  This project won the Grand Prize at Michigan's EECS183 Showcase.<br/><br/>
+			<a href="https://github.com/abwilf/Untimed">Repository</a></p>
+		</div>
+        </div>
+	</div>
+    </div>
+    <div class="proj_wrapper">
+	<div class= "proj"> 
+        <div id="kindle">
+		<img class="nav_im" alt="Amazon Kindle - source: https://unsplash.com/search/kindle?photo=yzVxz_OYVxU" src="kindle_photo.jpg"/>
+		<div class="col">
+			<h1 class = "h">Kindle Reader</h1> <p class="p">
+				A command line application implemented with c++.  Downloading "notes" files on old Kindle 2.0's is not supported anymore in Amazon's more advanced cloud service, so I created an application that parses notes from the Kindle's "myclippings.txt" and writes it to separate text files on the Desktop in a new folder "Kindle Notes". 
+				<br/><br/>
+			<a href="https://github.com/abwilf/Kindle_Reader">Repository</a>
+			</p>
+		</div>
+        </div>
+	</div>
+    </div>
+</body>
+</html>
