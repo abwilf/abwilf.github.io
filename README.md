@@ -1,4 +1,18 @@
 # al-folio
+
+## To update
+- To add a paper: `papers.bib`
+- And put the image in `assets/img/publication_preview`
+
+## To run
+```bash
+cd ~/code/abwilf.github.io
+bundle exec jekyll serve --lsi --watch --trace
+```
+
+
+---
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [maintainers]: https://img.shields.io/badge/maintainers-4-success.svg 'Number of maintainers'
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
