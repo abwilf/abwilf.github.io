@@ -18,7 +18,7 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-I am a PhD student at Carnegie Mellon University in the Language Technologies Institute advised by [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/). I work on multimodal machine learning with the goal of enabling artificial social intelligence.
+I am a PhD student at Carnegie Mellon University in the Language Technologies Institute advised by [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/). I work on multimodal machine learning, specifically applied to creating autonomous code generation systems.
 
 Prior to CMU, I worked with [Emily Mower Provost](https://emp.engin.umich.edu/) at the University of Michigan, where I completed my B.S. in Computer Science. "In the wild", I can be found attempting overly complex french recipes, marveling at the crafstmanship of a particularly well made piece of outerwear, or appreciating [the perfect chocolate chip cookie](https://levainbakery.com).
 
