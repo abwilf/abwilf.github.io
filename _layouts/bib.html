@@ -189,6 +189,9 @@
           {%- if entry.website %}
             <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">Website</a>
           {%- endif %}
+          {%- if entry.learnmore %}
+            <a href="{{ entry.learnmore }}" class="btn btn-sm z-depth-0" role="button">Learn More</a>
+          {%- endif %}
           {%- if entry.custom_name %}  
             <a href="{{ entry.custom_link }}" class="btn btn-sm z-depth-0" role="button">{{entry.custom_name}}</a> 
           {%- endif %}
