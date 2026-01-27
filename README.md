@@ -196,7 +196,7 @@ Workshop on Diffusion Models (NeurIPS: <a href="https://diffusionworkshop.github
       - [Upgrading from a previous version](#upgrading-from-a-previous-version)
     - [FAQ](#faq)
   - [Features](#features)
-    - [Publications](#publications)
+    - [Work](#publications)
     - [Collections](#collections)
     - [Layouts](#layouts)
       - [The iconic style of Distill](#the-iconic-style-of-distill)
