@@ -9,8 +9,8 @@ profile:
   image: prof_pic3.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>5719 Gates Hillman</p>
-    <p> awilf [at] cs.cmu.edu </p>
+    <p>MIT E15-379</p>
+    <p> awilf [at] {cs.cmu.edu, mit.edu} </p>
 
 news: true  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts
