@@ -18,9 +18,9 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-I am a PhD student at Carnegie Mellon University in the Language Technologies Institute advised by [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/). I work on multimodal machine learning, specifically applied to creating autonomous code generation systems.
+I am a PhD student at Carnegie Mellon University in the Language Technologies Institute advised by [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/) and a visiting researcher at MIT with [Paul Liang](https://pliang279.github.io/) and the [Multisensory Intelligence group](https://mit-mi.github.io/). I work on recursively self improving AI systems.
 
-Prior to CMU, I worked with [Emily Mower Provost](https://emp.engin.umich.edu/) at the University of Michigan, where I completed my B.S. in Computer Science. "In the wild", I can be found attempting overly complex french recipes, marveling at the crafstmanship of a particularly well made piece of outerwear, or appreciating [the perfect chocolate chip cookie](https://levainbakery.com).
+Prior to grad school, I spent time as a chef, journalist, and math teacher. "In the wild", I can be found attempting needlessly complex recipes, marveling at the crafstmanship of a particularly well made piece of outerwear, or appreciating [the perfect chocolate chip cookie](https://www.burdickchocolate.com).
 
 
 <!-- Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
