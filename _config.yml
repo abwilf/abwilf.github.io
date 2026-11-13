@@ -240,7 +240,7 @@ sass:
 # -----------------------------------------------------------------------------
 
 jekyll-minifier:
-  exclude: ['robots.txt', 'bingo/index.html']
+  exclude: ['robots.txt', '_pages/bingo.html', 'bingo/index.html']
   uglifier_args:
     harmony: true
 
