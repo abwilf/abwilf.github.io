@@ -59,30 +59,25 @@ sitemap: false
   .stats { display: flex; gap: 16px; font-size: 14px; color: var(--muted); margin-top: 8px; }
   .stats b { color: var(--ink); }
   .grid { display: grid; gap: 6px; margin-top: 12px; }
-  .cell { min-width: 0; padding: 6px; border-radius: 8px; border: 1px solid var(--line);
-    background: var(--card); color: var(--ink); display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-  .cell .fact { font-size: 12px; line-height: 1.25; flex: 1; overflow-wrap: anywhere; min-height: 3.6em; }
-  .cell select { width: 100%; min-width: 0; font: 12px system-ui, sans-serif; padding: 4px 2px; border-radius: 6px;
-    border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
-  .cell .go { font-size: 12px; padding: 5px 4px; font-weight: 600; }
-  .cell .note { font-size: 11px; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
-  .cell .note.miss { color: var(--bad); }
-  .cell .who { font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }
+  .cell { aspect-ratio: 1; min-width: 0; padding: 6px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); display: flex; flex-direction: column;
+    justify-content: space-between; text-align: left; overflow: hidden; }
+  .cell .fact { font-size: 12px; line-height: 1.25; overflow: hidden; display: -webkit-box;
+    -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow-wrap: anywhere; }
+  .cell .who { font-size: 11px; font-weight: 600; color: var(--accent);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cell.correct { background: var(--good-bg); border-color: var(--good); }
   .cell.correct .who { color: var(--good); }
   .cell.wrong { background: var(--bad-bg); border-color: var(--bad); }
-  .cell.wrong .who { color: var(--bad); }
-  .cell.free { background: var(--free); align-items: center; justify-content: center; font-weight: 700; min-height: 90px; }
-  .grid.s3 .cell .fact, .grid.s2 .cell .fact { font-size: 15px; }
-  .grid.s3 .cell select, .grid.s2 .cell select, .grid.s3 .cell .go, .grid.s2 .cell .go { font-size: 14px; padding: 7px 4px; }
-  .grid.s5 { gap: 4px; }
-  .grid.s5 .cell { padding: 4px; }
-  .grid.s5 .cell .fact { font-size: 11px; }
+  .cell.wrong .who { color: var(--bad); text-decoration: line-through; }
+  .cell.free { background: var(--free); align-items: center; justify-content: center; font-weight: 700; cursor: default; }
+  .grid.s3 .cell .fact { font-size: 15px; -webkit-line-clamp: 6; }
+  .grid.s3 .cell .who { font-size: 14px; }
   @media (min-width: 560px) {
     .cell { padding: 8px; }
-    .cell .fact { font-size: 14px; }
-    .cell select, .cell .go { font-size: 14px; }
-    .grid.s5 .cell .fact { font-size: 13px; }
+    .cell .fact { font-size: 14px; -webkit-line-clamp: 6; }
+    .cell .who { font-size: 13px; }
+    .grid.s3 .cell .fact { font-size: 18px; }
   }
   #modal { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex;
     align-items: flex-end; justify-content: center; }
@@ -104,6 +99,7 @@ sitemap: false
   <h1>Fun Fact Bingo</h1>
   <div id="app"><p class="muted">Loading…</p></div>
 </div>
+<div id="modal" hidden><div id="sheet"></div></div>
 <div id="offline" class="offline" hidden>Reconnecting…</div>
 
 
@@ -115,7 +111,8 @@ var POLL_MS = 4000;
 
 var state = null;   // last response from /api/state
 var team = 0;
-var busy = {};      // squares with a check in flight
+var open = -1;      // square shown in the dialog
+var busy = false;   // a check is in flight
 var epoch = 0;      // bumped on local changes so stale poll results are dropped
 var timer = null;
 
@@ -168,12 +165,13 @@ function apply(s) {
     var saved = parseInt(remember('bingo:team:' + s.game), 10) || 0;
     if (saved && s.started) { team = saved; epoch++; poll(); return render(); }
   }
-  if (team && (!s.started || !s.card)) team = 0;
+  if (team && (!s.started || !s.card)) { team = 0; open = -1; }
   render();
 }
 
 function setTeam(t) {
   team = t;
+  open = -1;
   if (state) remember('bingo:team:' + state.game, t);
   epoch++;
   if (state) state.card = null;
@@ -182,8 +180,7 @@ function setTeam(t) {
   poll();
 }
 
-function render(force) {
-  if (!force && editing()) { deferred = true; return; }
+function render() {
   var app = document.getElementById('app');
   var kids;
   if (!state) kids = [el('p', { class: 'muted', text: 'Loading…' })];
@@ -192,6 +189,7 @@ function render(force) {
   else if (!state.card) kids = [el('p', { class: 'muted', text: 'Loading your card…' })];
   else kids = cardView().concat(scoreboardView());
   app.replaceChildren.apply(app, kids.filter(Boolean));
+  renderModal();
 }
 
 function lobbyView() {
@@ -226,49 +224,24 @@ function cardView() {
   return [
     el('div', { class: 'topline' }, [
       el('div', {}, [el('b', { text: 'Team ' + team }), el('span', { class: 'muted small', text: '  ' + members.join(', ') })]),
-      el('button', { class: 'link small', text: 'Back to teams', onclick: function () { setTeam(0); } })
+      el('button', { class: 'link small', text: 'Not your team?', onclick: function () { setTeam(0); } })
     ]),
     stats.bingoAt ? el('div', { class: 'banner', text: 'BINGO! Shout it out!' }) : null,
-    el('p', { class: 'small muted', text: 'Find the person behind each fact: pick a name in a square and press Check. ' +
-      'You get ' + state.maxTries + ' tries per square. Your teammates see the same card.' }),
+    el('p', { class: 'small muted', text: 'Find the person behind each fact. Tap a square, pick a name, then check. ' +
+      'Each square can only be checked once. Your teammates see the same card.' }),
     el('div', { class: 'stats' }, [
       el('span', {}, [el('b', { text: String(stats.correct) }), ' correct']),
       el('span', {}, [el('b', { text: String(stats.checked) }), ' / ' + stats.squares + ' checked'])
     ]),
-    el('div', { class: 'grid s' + card.size, style: 'grid-template-columns: repeat(' + card.size + ', minmax(0, 1fr))' },
-      card.cells.map(cellView))
+    el('div', { class: 'grid s' + card.size, style: 'grid-template-columns: repeat(' + card.size + ', 1fr)' },
+      card.cells.map(function (cell, i) {
+        if (cell.free) return el('div', { class: 'cell free', text: 'FREE' });
+        return el('button', { class: 'cell ' + (cell.result || ''), onclick: function () { open = i; renderModal(true); } }, [
+          el('span', { class: 'fact', text: cell.fact }),
+          el('span', { class: 'who', text: cell.pick ? (cell.result === 'correct' ? '✓ ' : '') + cell.pick : '' })
+        ]);
+      }))
   ];
-}
-
-function cellView(cell, sq) {
-  if (cell.free) return el('div', { class: 'cell free', text: 'FREE' });
-  var kids = [el('span', { class: 'fact', text: cell.fact })];
-  var misses = cell.misses || [];
-  if (cell.result === 'correct') {
-    kids.push(el('span', { class: 'who', text: '✓ ' + cell.pick }));
-  } else if (cell.result === 'wrong') {
-    kids.push(el('span', { class: 'who', text: '✗ Out of tries' }));
-    kids.push(el('span', { class: 'note miss', text: 'Not ' + misses.join(', ') }));
-  } else {
-    var go = el('button', { class: 'go primary', disabled: !!busy[sq] || !cell.pick,
-      text: busy[sq] ? '…' : 'Check', onclick: function () { check(sq, select.value); } });
-    var select = el('select', { 'data-sq': sq, disabled: !!busy[sq], onchange: function () {
-      cell.pick = select.value;
-      go.disabled = !select.value;
-      epoch++;
-      api('/api/pick', { team: team, sq: sq, pick: select.value }).catch(function () {});
-    } }, [el('option', { value: '', text: 'Who?' })].concat(state.card.options.map(function (n) {
-      var tried = misses.indexOf(n) >= 0;
-      return el('option', { value: n, disabled: tried, text: tried ? '✗ ' + n : n });
-    })));
-    select.value = misses.indexOf(cell.pick) >= 0 ? '' : (cell.pick || '');
-    if (!select.value) go.disabled = true;
-    kids.push(select, go);
-    var left = cell.triesLeft == null ? state.maxTries : cell.triesLeft;
-    kids.push(el('span', { class: 'note' + (misses.length ? ' miss' : ''),
-      text: (misses.length ? 'Not ' + misses.join(', ') + ' · ' : '') + left + (left === 1 ? ' try' : ' tries') + ' left' }));
-  }
-  return el('div', { class: 'cell ' + (cell.result || '') }, kids);
 }
 
 function scoreboardView() {
@@ -291,27 +264,60 @@ function scoreboardView() {
   ];
 }
 
-// Don't rebuild the card while someone has a dropdown open; catch up when they leave it.
-var deferred = false;
-function editing() {
-  var a = document.activeElement;
-  return a && a.tagName === 'SELECT' && document.getElementById('app').contains(a);
+function closeModal() { open = -1; renderModal(); }
+
+// force: rebuild even if the dialog for this square is already showing.
+function renderModal(force) {
+  var modal = document.getElementById('modal');
+  var sheet = document.getElementById('sheet');
+  var cell = state && state.card && open >= 0 ? state.card.cells[open] : null;
+  if (!cell || cell.free) { modal.hidden = true; return; }
+  // Don't yank the dropdown out from under someone using it during a background refresh.
+  var sel = sheet.querySelector('select');
+  if (!force && !modal.hidden && sel && sheet.dataset.sq === String(open) && !cell.result && !busy
+      && (document.activeElement === sel || sel.value === (cell.pick || ''))) return;
+  sheet.dataset.sq = String(open);
+  var sq = open;
+  var kids = [el('p', { class: 'fact', text: cell.fact })];
+  if (cell.result) {
+    kids.push(el('p', { class: 'verdict ' + cell.result,
+      text: cell.result === 'correct' ? '✓ Correct, it is ' + cell.pick + '.' : '✗ Not ' + cell.pick + '. This square is locked.' }));
+    kids.push(el('div', { class: 'row' }, [el('button', { text: 'Close', onclick: closeModal })]));
+  } else {
+    var checkBtn = el('button', { class: 'primary', disabled: busy || !cell.pick,
+      text: busy ? 'Checking…' : 'Check (one try)', onclick: function () { check(sq, select.value); } });
+    var select = el('select', { disabled: busy, onchange: function () {
+      cell.pick = select.value;
+      checkBtn.disabled = !select.value;
+      epoch++;
+      api('/api/pick', { team: team, sq: sq, pick: select.value }).catch(function () {});
+      render();
+    } }, [el('option', { value: '', text: 'Who is it?' })].concat(state.card.options.map(function (n) {
+      return el('option', { value: n, text: n });
+    })));
+    select.value = cell.pick || '';
+    kids.push(select);
+    kids.push(el('div', { class: 'row' }, [el('button', { text: 'Close', onclick: closeModal }), checkBtn]));
+  }
+  sheet.replaceChildren.apply(sheet, kids);
+  modal.hidden = false;
 }
-document.addEventListener('focusout', function () {
-  setTimeout(function () { if (deferred && !editing()) { deferred = false; render(); } }, 0);
-});
 
 function check(sq, pick) {
   if (!pick) return;
-  busy[sq] = true;
+  busy = true;
   epoch++;
   var at = epoch;
-  render(true);
+  clearTimeout(timer);
+  renderModal(true);
   api('/api/check', { team: team, sq: sq, pick: pick })
-    .then(function (s) { online(true); delete busy[sq]; if (at === epoch) apply(s); else render(true); })
-    .catch(function (e) { delete busy[sq]; render(true); alert('Could not check: ' + e.message); });
+    .then(function (s) { online(true); busy = false; if (at === epoch) apply(s); else render(); })
+    .catch(function (e) { busy = false; render(); alert('Could not check: ' + e.message); })
+    .then(function () { renderModal(true); schedule(); });
 }
 
+document.getElementById('modal').onclick = function (e) { if (e.target === this) closeModal(); };
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 document.addEventListener('visibilitychange', function () { if (!document.hidden) poll(); });
 poll();
 </script>
