@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fun Fact Bingo</title>
+<style>
+  :root {
+    --bg: #f6f4ee; --card: #ffffff; --ink: #1f2430; --muted: #6b7280; --line: #d9d5c8;
+    --accent: #2f5fd0; --good: #1f8a4c; --good-bg: #dff3e6; --bad: #c0392b; --bad-bg: #f9e1dd;
+    --free: #fff3c4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15171c; --card: #20232b; --ink: #eceef2; --muted: #9aa1ae; --line: #343946;
+      --accent: #7ea2ff; --good: #5fd08f; --good-bg: #173524; --bad: #ff8a7a; --bad-bg: #40201c;
+      --free: #4a401a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 24px; margin: 4px 0 2px; }
+  h2 { font-size: 17px; margin: 24px 0 8px; }
+  p { margin: 8px 0; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  a { color: var(--accent); }
+  button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); padding: 10px 14px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button:disabled { opacity: .5; cursor: default; }
+  button.link { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 12px; }
+  .big { font-size: 44px; font-weight: 700; line-height: 1; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  th { font-size: 13px; color: var(--muted); font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.me td { font-weight: 700; }
+  .tag { display: inline-block; background: var(--good); color: #fff; border-radius: 999px;
+    font-size: 11px; font-weight: 700; padding: 2px 8px; margin-left: 6px; }
+  .offline { position: fixed; left: 50%; bottom: 12px; transform: translateX(-50%); background: var(--bad);
+    color: #fff; padding: 6px 12px; border-radius: 999px; font-size: 13px; }
+  .offline[hidden] { display: none; }
+  .row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .teams { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-top: 12px; }
+  .teams button { text-align: left; }
+  .teams b { display: block; }
+  .topline { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .banner { background: var(--good-bg); color: var(--good); border: 1px solid var(--good);
+    border-radius: 12px; padding: 12px; text-align: center; font-weight: 700; font-size: 20px; margin: 12px 0; }
+  .stats { display: flex; gap: 16px; font-size: 14px; color: var(--muted); margin-top: 8px; }
+  .stats b { color: var(--ink); }
+  .grid { display: grid; gap: 6px; margin-top: 12px; }
+  .cell { min-width: 0; padding: 6px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+  .cell .fact { font-size: 12px; line-height: 1.25; flex: 1; overflow-wrap: anywhere; min-height: 3.6em; }
+  .cell select { width: 100%; min-width: 0; font: 12px system-ui, sans-serif; padding: 4px 2px; border-radius: 6px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  .cell .go { font-size: 12px; padding: 5px 4px; font-weight: 600; }
+  .cell .note { font-size: 11px; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
+  .cell .note.miss { color: var(--bad); }
+  .cell .who { font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }
+  .cell.correct { background: var(--good-bg); border-color: var(--good); }
+  .cell.correct .who { color: var(--good); }
+  .cell.wrong { background: var(--bad-bg); border-color: var(--bad); }
+  .cell.wrong .who { color: var(--bad); }
+  .cell.free { background: var(--free); align-items: center; justify-content: center; font-weight: 700; min-height: 90px; }
+  .grid.s3 .cell .fact, .grid.s2 .cell .fact { font-size: 15px; }
+  .grid.s3 .cell select, .grid.s2 .cell select, .grid.s3 .cell .go, .grid.s2 .cell .go { font-size: 14px; padding: 7px 4px; }
+  .grid.s5 { gap: 4px; }
+  .grid.s5 .cell { padding: 4px; }
+  .grid.s5 .cell .fact { font-size: 11px; }
+  @media (min-width: 560px) {
+    .cell { padding: 8px; }
+    .cell .fact { font-size: 14px; }
+    .cell select, .cell .go { font-size: 14px; }
+    .grid.s5 .cell .fact { font-size: 13px; }
+  }
+  #modal { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex;
+    align-items: flex-end; justify-content: center; }
+  #modal[hidden] { display: none; }
+  #sheet { background: var(--card); width: 100%; max-width: 520px; border-radius: 16px 16px 0 0; padding: 20px; }
+  @media (min-width: 560px) { #modal { align-items: center; } #sheet { border-radius: 16px; } }
+  #sheet .fact { font-size: 20px; font-weight: 600; margin: 0 0 16px; overflow-wrap: anywhere; }
+  #sheet select { width: 100%; font: inherit; padding: 12px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  #sheet .row button { flex: 1; }
+  .verdict { font-weight: 700; font-size: 18px; }
+  .verdict.correct { color: var(--good); }
+  .verdict.wrong { color: var(--bad); }
+  .error { color: var(--bad); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Fun Fact Bingo</h1>
+  <div id="app"><p class="muted">Loading…</p></div>
+</div>
+<div id="offline" class="offline" hidden>Reconnecting…</div>
+
+
+<script>
+// Backend URL. ?api=... overrides it (used for local testing).
+var API = new URLSearchParams(location.search).get('api') ||
+  'https://fun-fact-bingo.abwilf.workers.dev';
+var POLL_MS = 4000;
+
+var state = null;   // last response from /api/state
+var team = 0;
+var busy = {};      // squares with a check in flight
+var epoch = 0;      // bumped on local changes so stale poll results are dropped
+var timer = null;
+
+function el(tag, attrs, kids) {
+  var n = document.createElement(tag);
+  for (var k in attrs || {}) {
+    var v = attrs[k];
+    if (v === false || v == null) continue;
+    if (k === 'text') n.textContent = v;
+    else if (k.slice(0, 2) === 'on') n[k] = v;
+    else n.setAttribute(k, v === true ? '' : v);
+  }
+  (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+  return n;
+}
+function remember(key, val) {
+  try {
+    if (val === undefined) return localStorage.getItem(key);
+    localStorage.setItem(key, String(val));
+  } catch (e) { return null; }
+}
+
+function api(path, body) {
+  return fetch(API + path, body ? {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  } : { cache: 'no-store' }).then(function (r) {
+    return r.json().then(function (j) {
+      if (!r.ok) throw new Error(j && j.error || 'HTTP ' + r.status);
+      return j;
+    });
+  });
+}
+function online(ok) { document.getElementById('offline').hidden = ok; }
+
+function poll() {
+  clearTimeout(timer);
+  var at = epoch;
+  api('/api/state?team=' + team)
+    .then(function (s) { online(true); if (at === epoch) apply(s); })
+    .catch(function () { online(false); })
+    .then(schedule);
+}
+function schedule() { clearTimeout(timer); timer = setTimeout(poll, POLL_MS); }
+
+function apply(s) {
+  var first = !state;
+  state = s;
+  // Remember the team per game, so a new or reset game starts fresh.
+  if (first && !team) {
+    var saved = parseInt(remember('bingo:team:' + s.game), 10) || 0;
+    if (saved && s.started) { team = saved; epoch++; poll(); return render(); }
+  }
+  if (team && (!s.started || !s.card)) team = 0;
+  render();
+}
+
+function setTeam(t) {
+  team = t;
+  if (state) remember('bingo:team:' + state.game, t);
+  epoch++;
+  if (state) state.card = null;
+  render();
+  window.scrollTo(0, 0);
+  poll();
+}
+
+function render(force) {
+  if (!force && editing()) { deferred = true; return; }
+  var app = document.getElementById('app');
+  var kids;
+  if (!state) kids = [el('p', { class: 'muted', text: 'Loading…' })];
+  else if (!state.started) kids = lobbyView();
+  else if (!team) kids = pickerView().concat(scoreboardView());
+  else if (!state.card) kids = [el('p', { class: 'muted', text: 'Loading your card…' })];
+  else kids = cardView().concat(scoreboardView());
+  app.replaceChildren.apply(app, kids.filter(Boolean));
+}
+
+function lobbyView() {
+  return [el('div', { class: 'panel' }, [
+    el('p', { text: 'The game has not started yet.' }),
+    state.formUrl ? el('p', {}, ['Not signed up? ', el('a', { href: state.formUrl, target: '_blank', text: 'Add your fun fact' }), '.']) : null,
+    el('p', { class: 'small muted', text: 'Teams will appear here when the host starts the game. No need to refresh.' })
+  ])];
+}
+
+function pickerView() {
+  return [
+    el('p', { text: 'Find your name and tap your team.' }),
+    el('div', { class: 'teams' }, state.teams.map(function (t) {
+      return el('button', { onclick: function () { setTeam(t.id); } }, [
+        el('b', { text: 'Team ' + t.id }),
+        el('span', { class: 'small muted', text: t.members.join(', ') })
+      ]);
+    }))
+  ];
+}
+
+function myStats() {
+  for (var i = 0; i < state.scoreboard.length; i++) if (state.scoreboard[i].team === team) return state.scoreboard[i];
+  return null;
+}
+
+function cardView() {
+  var card = state.card;
+  var stats = myStats() || { correct: 0, checked: 0, squares: 0, bingoAt: 0 };
+  var members = (state.teams[team - 1] || { members: [] }).members;
+  return [
+    el('div', { class: 'topline' }, [
+      el('div', {}, [el('b', { text: 'Team ' + team }), el('span', { class: 'muted small', text: '  ' + members.join(', ') })]),
+      el('button', { class: 'link small', text: 'Back to teams', onclick: function () { setTeam(0); } })
+    ]),
+    stats.bingoAt ? el('div', { class: 'banner', text: 'BINGO! Shout it out!' }) : null,
+    el('p', { class: 'small muted', text: 'Find the person behind each fact: pick a name in a square and press Check. ' +
+      'You get ' + state.maxTries + ' tries per square. Your teammates see the same card.' }),
+    el('div', { class: 'stats' }, [
+      el('span', {}, [el('b', { text: String(stats.correct) }), ' correct']),
+      el('span', {}, [el('b', { text: String(stats.checked) }), ' / ' + stats.squares + ' checked'])
+    ]),
+    el('div', { class: 'grid s' + card.size, style: 'grid-template-columns: repeat(' + card.size + ', minmax(0, 1fr))' },
+      card.cells.map(cellView))
+  ];
+}
+
+function cellView(cell, sq) {
+  if (cell.free) return el('div', { class: 'cell free', text: 'FREE' });
+  var kids = [el('span', { class: 'fact', text: cell.fact })];
+  var misses = cell.misses || [];
+  if (cell.result === 'correct') {
+    kids.push(el('span', { class: 'who', text: '✓ ' + cell.pick }));
+  } else if (cell.result === 'wrong') {
+    kids.push(el('span', { class: 'who', text: '✗ Out of tries' }));
+    kids.push(el('span', { class: 'note miss', text: 'Not ' + misses.join(', ') }));
+  } else {
+    var go = el('button', { class: 'go primary', disabled: !!busy[sq] || !cell.pick,
+      text: busy[sq] ? '…' : 'Check', onclick: function () { check(sq, select.value); } });
+    var select = el('select', { 'data-sq': sq, disabled: !!busy[sq], onchange: function () {
+      cell.pick = select.value;
+      go.disabled = !select.value;
+      epoch++;
+      api('/api/pick', { team: team, sq: sq, pick: select.value }).catch(function () {});
+    } }, [el('option', { value: '', text: 'Who?' })].concat(state.card.options.map(function (n) {
+      var tried = misses.indexOf(n) >= 0;
+      return el('option', { value: n, disabled: tried, text: tried ? '✗ ' + n : n });
+    })));
+    select.value = misses.indexOf(cell.pick) >= 0 ? '' : (cell.pick || '');
+    if (!select.value) go.disabled = true;
+    kids.push(select, go);
+    var left = cell.triesLeft == null ? state.maxTries : cell.triesLeft;
+    kids.push(el('span', { class: 'note' + (misses.length ? ' miss' : ''),
+      text: (misses.length ? 'Not ' + misses.join(', ') + ' · ' : '') + left + (left === 1 ? ' try' : ' tries') + ' left' }));
+  }
+  return el('div', { class: 'cell ' + (cell.result || '') }, kids);
+}
+
+function scoreboardView() {
+  return [
+    el('h2', { text: 'Scoreboard' }),
+    el('table', {}, [
+      el('thead', {}, [el('tr', {}, [
+        el('th', { text: '#' }), el('th', { text: 'Team' }),
+        el('th', { class: 'num', text: 'Correct' }), el('th', { class: 'num', text: 'Checked' })
+      ])]),
+      el('tbody', {}, state.scoreboard.map(function (s, i) {
+        return el('tr', { class: s.team === team ? 'me' : null }, [
+          el('td', { text: String(i + 1) }),
+          el('td', {}, ['Team ' + s.team, s.bingoAt ? el('span', { class: 'tag', text: 'BINGO' }) : null]),
+          el('td', { class: 'num', text: String(s.correct) }),
+          el('td', { class: 'num', text: s.checked + ' / ' + s.squares })
+        ]);
+      }))
+    ])
+  ];
+}
+
+// Don't rebuild the card while someone has a dropdown open; catch up when they leave it.
+var deferred = false;
+function editing() {
+  var a = document.activeElement;
+  return a && a.tagName === 'SELECT' && document.getElementById('app').contains(a);
+}
+document.addEventListener('focusout', function () {
+  setTimeout(function () { if (deferred && !editing()) { deferred = false; render(); } }, 0);
+});
+
+function check(sq, pick) {
+  if (!pick) return;
+  busy[sq] = true;
+  epoch++;
+  var at = epoch;
+  render(true);
+  api('/api/check', { team: team, sq: sq, pick: pick })
+    .then(function (s) { online(true); delete busy[sq]; if (at === epoch) apply(s); else render(true); })
+    .catch(function (e) { delete busy[sq]; render(true); alert('Could not check: ' + e.message); });
+}
+
+document.addEventListener('visibilitychange', function () { if (!document.hidden) poll(); });
+poll();
+</script>
+</body>
+</html>
